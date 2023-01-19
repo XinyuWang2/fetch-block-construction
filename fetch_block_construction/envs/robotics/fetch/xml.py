@@ -1,5 +1,8 @@
 from .colors import get_colors
-BASIC_COLORS = ["0 1 0", "1 1 0", "0.2 0.8 0.8", "0.8 0.2 0.8", "1.0 0.0 0.0", "0 0 0"]
+
+BASIC_COLORS = [
+    "0 1 0", "1 1 0", "0.2 0.8 0.8", "0.8 0.2 0.8", "1.0 0.0 0.0", "0 0 0"
+]
 
 base = '''<?xml version="1.0" encoding="utf-8"?>
 <mujoco>
@@ -23,13 +26,15 @@ base = '''<?xml version="1.0" encoding="utf-8"?>
         </body>
 
         <include file="robot.xml"></include>
-        
+
         <body pos="1.3 0.75 0.2" name="table0">
-            <geom size="0.25 0.35 0.2" type="box" mass="2000" material="table_mat"></geom>
+            <geom pos="-0.7 0.7 0.0" size="0.4 0.4 0.2" type="box" friction="0.8" mass="2000" material="table_mat"></geom>
+            <geom pos="-0.7 -0.7 0.0" size="0.4 0.4 0.2" type="box" friction="0.8" mass="2000" material="table_mat"></geom>
+            <geom pos="0.1 0.0 0.0" size="0.5 1.1 0.2" type="box" friction="0.8" mass="2000" material="table_mat"></geom>
         </body>
-        
+
         {object_bodies}
-        
+
         <light directional="true" ambient="0.2 0.2 0.2" diffuse="0.8 0.8 0.8" specular="0.3 0.3 0.3" castshadow="false" pos="0 0 4" dir="0 0 -1" name="light0"></light>
     </worldbody>
 
@@ -42,24 +47,27 @@ base = '''<?xml version="1.0" encoding="utf-8"?>
         '''
 
 def generate_xml(num_blocks):
-    if num_blocks <= 6:
-        colors = BASIC_COLORS[:num_blocks]
-    else:
-        colors = get_colors(num_blocks)
-    site_base = '<site name="target{id}" pos="0 0 0.5" size="0.02 0.02 0.02" rgba="{color} 0.3" type="sphere"></site>'
-    block_base = '''<body name="object{id}" pos="0.025 0.025 0.025">
+  if num_blocks <= 6:
+    colors = BASIC_COLORS[:num_blocks]
+  else:
+    colors = get_colors(num_blocks)
+  site_base = '<site name="target{id}" pos="0 0 0.5" size="0.02 0.02 0.02" rgba="{color} 0.3" type="sphere"></site>'
+  block_base = '''<body name="object{id}" pos="0.025 0.025 0.025">
         <joint name="object{id}:joint" type="free" damping="0.01"></joint>
         <geom size="0.025 0.025 0.025" type="box" condim="3" name="object{id}" material="block{id}_mat" mass="2"></geom>
         <site name="object{id}" pos="0 0 0" size="0.02 0.02 0.02" rgba="1 0 0 1" type="sphere"></site>
     </body>'''
-    asset_base = '<material name="block{id}_mat" specular="0" shininess="0.5" reflectance="0" rgba="{color} 1"></material>'
+  asset_base = '<material name="block{id}_mat" specular="0" shininess="0.5" reflectance="0" rgba="{color} 1"></material>'
 
-    sites = []
-    block_bodies = []
-    assets = []
-    for i in range(num_blocks):
-        sites.append(site_base.format(**dict(id=i, color=colors[i])))
-        block_bodies.append(block_base.format(**dict(id=i)))
-        assets.append(asset_base.format(**dict(id=i, color=colors[i])))
+  sites = []
+  block_bodies = []
+  assets = []
+  for i in range(num_blocks):
+    sites.append(site_base.format(**dict(id=i, color=colors[i])))
+    block_bodies.append(block_base.format(**dict(id=i)))
+    assets.append(asset_base.format(**dict(id=i, color=colors[i])))
 
-    return base.format(**dict(assets="\n".join(assets), target_sites="\n".join(sites), object_bodies="\n".join(block_bodies)))
+  return base.format(**dict(
+      assets="\n".join(assets),
+      target_sites="\n".join(sites),
+      object_bodies="\n".join(block_bodies)))
