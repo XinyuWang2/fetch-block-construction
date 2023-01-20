@@ -5,3 +5,4 @@ robotics-recorder-venv/
 .idea/
 __pycache__/
 *.pyc
+*.xml
