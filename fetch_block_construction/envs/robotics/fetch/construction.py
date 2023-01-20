@@ -215,20 +215,21 @@ class FetchBlockConstructionEnv(fetch_env.FetchEnv, gym_utils.EzPickle):
     self.sim.set_state(self.initial_state)
 
     # Randomize start position of objects.
-
     prev_obj_xpos = []
 
-    for obj_name in self.object_names:
+    for idx, obj_name in enumerate(self.object_names):
       object_xypos = self.initial_gripper_xpos[:2] + self.np_random.uniform(
           -self.obj_range, self.obj_range, size=2)
 
-      while not ((np.linalg.norm(object_xypos - self.initial_gripper_xpos[:2])
-                  >= 0.1) and np.all([
-                      np.linalg.norm(object_xypos - other_xpos) >= 0.06
-                      for other_xpos in prev_obj_xpos
-                  ])):
-        object_xypos = self.initial_gripper_xpos[:2] + self.np_random.uniform(
-            -self.obj_range, self.obj_range, size=2)
+      # while not ((np.linalg.norm(object_xypos - self.initial_gripper_xpos[:2])
+      #             >= 0.1) and np.all([
+      #                 np.linalg.norm(object_xypos - other_xpos) >= 0.06
+      #                 for other_xpos in prev_obj_xpos
+      #             ])):
+      object_xypos = self.initial_gripper_xpos[:2] + np.array(
+          [0.1, 0]) * (idx + 1) - np.array([0.15, 0.0])
+      # self.np_random.uniform(
+      #     -self.obj_range, self.obj_range, size=2)
 
       prev_obj_xpos.append(object_xypos)
 
