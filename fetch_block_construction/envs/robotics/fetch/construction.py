@@ -174,7 +174,7 @@ class FetchBlockConstructionEnv(fetch_env.FetchEnv, gym_utils.EzPickle):
       obs = np.concatenate([
           obs,
           object_i_pos.ravel(),
-          object_i_rel_pos.ravel(),
+          #object_i_rel_pos.ravel(),
           object_i_rot.ravel(),
           object_i_velp.ravel(),
           object_i_velr.ravel()
