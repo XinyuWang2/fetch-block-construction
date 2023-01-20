@@ -46,6 +46,7 @@ base = '''<?xml version="1.0" encoding="utf-8"?>
 
         '''
 
+
 def generate_xml(num_blocks):
   if num_blocks <= 6:
     colors = BASIC_COLORS[:num_blocks]

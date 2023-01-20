@@ -147,6 +147,7 @@ class FetchEnv(robot_env.RobotEnv):
         grip_velp,
         gripper_vel,
     ])
+
     if self.obs_type == 'dictimage':
       image_obs = self.render(mode='rgb_array', size=self.render_size)
 
