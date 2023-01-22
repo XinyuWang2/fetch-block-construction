@@ -41,7 +41,7 @@ class FetchBlockConstructionEnv(fetch_env.FetchEnv, gym_utils.EzPickle):
         self,
         MODEL_XML_PATH,
         has_object=True,
-        block_gripper=False,
+        block_gripper=True,
         n_substeps=20,
         gripper_extra_height=0.2,
         target_in_the_air=True,
