@@ -1,10 +1,11 @@
-import os
 import copy
-import numpy as np
+import os
 
 import gym
-from gym import error, spaces
+from gym import error
+from gym import spaces
 from gym.utils import seeding
+import numpy as np
 
 try:
     import mujoco_py
@@ -12,7 +13,7 @@ except ImportError as e:
     raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
 
 
-class RobotEnv(gym.GoalEnv):
+class RobotEnv(gym.Env):
     def __init__(self, model_path, initial_qpos, n_actions, n_substeps, render_size):
         if model_path.startswith('/'):
             fullpath = model_path
@@ -119,13 +120,12 @@ class RobotEnv(gym.GoalEnv):
             # self.viewer.finish()
             self.viewer = None
 
-    def render(self, mode='human', size=None):
+    def render(self, mode='human', width=None, height=None):
         self._render_callback()
         if mode == 'rgb_array':
-            size=800
             # window size used for old mujoco-py:
-            if size:
-                data = self.sim.render(size, size, camera_name="external_camera_0")
+            if width and height:
+                data = self.sim.render(width, height, camera_name="external_camera_0")
             else:
                 data = self.sim.render(self.render_size, self.render_size, camera_name="external_camera_0")
             # original image is upside-down, so flip it
